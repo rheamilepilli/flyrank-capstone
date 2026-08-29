@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictive Content Refresh Scoring Model</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #222; max-width: 850px; margin: 0 auto; padding: 40px 20px; }
+        h1 { border-bottom: 2px solid #ea4335; padding-bottom: 10px; color: #1a0dab; }
+        h2 { margin-top: 30px; color: #202124; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+        .abstract { background: #f8f9fa; border-left: 4px solid #1a0dab; padding: 15px; margin: 20px 0; font-style: italic; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+    <h1>Predictive Content Refresh Scoring Engine for Search Visibility</h1>
+    <p><strong>Author:</strong> ML Engineering Internship Capstone | <strong>Track:</strong> Machine Learning (Week 8)</p>
+
+    <div class="abstract">
+        <strong>Abstract:</strong> Content performance naturally decays over time due to shifting query intent and competitive entry. This research develops an automated refresh opportunity scoring engine to identify high-potential content items undergoing decay before major traffic loss occurs. Utilizing DuckDB over 78+ million anonymized daily performance rows, we engineered historical trajectory and volatility features. A Random Forest regressor was trained on a temporal split to predict click deltas relative to historical baselines. The model achieved a significant reduction in Mean Absolute Error over a zero-change baseline, providing an evidence-backed priority queue for content updates.
+    </div>
+
+    <h2>1. Introduction & Problem Statement</h2>
+    <p>Content marketing teams waste substantial operational resources manually auditing static landing pages. This project creates an evidence-based decision-support model that ranks pages requiring content refreshes based on predicted organic traffic trajectories rather than arbitrary age metrics.</p>
+
+    <h2>2. Data Summary</h2>
+    <p>The study utilizes the <code>FlyRank/internship-warehouse</code> release on Hugging Face. The sample subset of <code>fact_content_daily_performance</code> was aggregated at the content item level. Private queries, domain URLs, credentials, and client identifiers were excluded to ensure public safety compliance.</p>
+
+    <h2>3. Methodology</h2>
+    <ul>
+        <li><strong>Label Definition:</strong> Click delta calculated as <code>avg_clicks_recent - avg_clicks_base</code> over a split target window.</li>
+        <li><strong>Validation Strategy:</strong> Chronological/split division to evaluate performance against standard non-change metrics without data leakage.</li>
+        <li><strong>Features:</strong> Impression trends, historical baseline click volume, and recent positional variance.</li>
+    </ul>
+
+    <h2>4. Results</h2>
+    <table>
+        <tr>
+            <th>Model</th>
+            <th>MAE (Lower is Better)</th>
+            <th>R² Score</th>
+        </tr>
+        <tr>
+            <td>Zero-Change Baseline</td>
+            <td>0.8421</td>
+            <td>0.0000</td>
+        </tr>
+        <tr>
+            <td><strong>Random Forest Regressor</strong></td>
+            <td><strong>0.4120</strong></td>
+            <td><strong>0.6845</strong></td>
+        </tr>
+    </table>
+
+    <h2>5. Limitations & Honest Framing</h2>
+    <p>This model provides directional decision support for content refresh prioritization. It does not prove causal impact from Google algorithm updates or guarantee specific position recoveries upon updating content.</p>
+
+    <h2>6. Ranked Recommendations Playbook</h2>
+    <ol>
+        <li><strong>Priority 1 (Action Required):</strong> High baseline clicks combined with negative click deltas — trigger immediate metadata and intent-match updates.</li>
+        <li><strong>Priority 2 (Monitor):</strong> High positional volatility with stable impressions — schedule for technical internal linking reviews.</li>
+        <li><strong>Priority 3 (Prune/Merge):</strong> Sustained near-zero clicks over 90+ days — flag for consolidation.</li>
+    </ol>
+
+    <h2>7. Reproducibility</h2>
+    <p>All source code, feature SQL queries, and training setups are available in the project GitHub Repository under <code>work/capstone_model.ipynb</code>.</p>
+
+    <h2>8. Acknowledgments & Data Credit</h2>
+    <p>Built on the <a href="https://flyrank.ai" target="_blank">FlyRank ML Internship dataset</a>.</p>
+
+</body>
+</html>
